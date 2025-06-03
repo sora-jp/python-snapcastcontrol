@@ -26,7 +26,6 @@ import threading
 # CLIENT_SETNAME,
 # CLIENT_SETSTREAM,
 # GROUP_GETSTATUS,
-# GROUP_SETSTREAM,
 # GROUP_SETCLIENTS,
 # STREAM_SETMETA,
 # STREAM_ONMETA,
@@ -43,6 +42,7 @@ from .library.Actions import (
 	CLIENT_ONLATENCYCHANGED,
 	CLIENT_ONNAMECHANGED,
 	GROUP_SETMUTE,
+	GROUP_SETSTREAM,
 	GROUP_ONMUTE,
 	GROUP_ONSTREAMCHANGED,
 	STREAM_ONUPDATE,
@@ -368,8 +368,12 @@ class SnapControl(threading.Thread):
 	# def deleteClient(self,clientId):
 	#   pass
 	# #-----------------------------------------------
-	# def setStream(self,group_id, streamId):
-	#   pass
+	async def setStream(self,group_id, streamId):
+		self.getGroup(group_id).stream_id = streamId
+		await self._sendReq(GROUP_SETSTREAM, {
+			'id': group_id,
+			'stream_id': streamId
+		})
 	# #-----------------------------------------------
 	# def setClients(self,group_id, clients):
 	#   pass
@@ -380,8 +384,8 @@ class SnapControl(threading.Thread):
 		self.getGroup(group_id).muted = mute
 
 		await self._sendReq(GROUP_SETMUTE, {
-			 'id': group_id,
-				'mute': mute
+			'id': group_id,
+			'mute': mute
 		})
 
 

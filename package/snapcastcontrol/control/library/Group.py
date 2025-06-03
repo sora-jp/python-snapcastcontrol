@@ -81,3 +81,7 @@ class Group():
   @property
   def stream_id(self):
     return self._stream_id
+
+  @stream_id.setter
+  def stream_id(self, value):
+    self._stream_id = value
